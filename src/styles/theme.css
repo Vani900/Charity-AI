@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #2563EB;
+  --color-brand-blue-light: #60A5FA;
+  --color-brand-blue-tint: #EFF6FF;
+  --color-brand-dark: #111827;
+  --color-brand-grey-bg: #F3F4F6;
+  --color-brand-grey-med: #9CA3AF;
+  --color-brand-grey-dark: #4B5563;
+  --color-brand-success: #10B981;
+  --color-brand-danger: #EF4444;
+}
+
+@layer base {
+  :root {
+    --bg-color: #FFFFFF;
+    --text-color: #111827;
+    --card-bg: #FFFFFF;
+    --border-color: #E5E7EB;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+  }
+
+  .dark {
+    --bg-color: #0A0A0A;
+    --text-color: #F9FAFB;
+    --card-bg: #1A1A1A;
+    --border-color: #2A2A2A;
+    --glass-bg: rgba(10, 10, 10, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: -apple-system, "SF Pro Display", "Inter", sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply flex items-center justify-center gap-2 bg-brand-blue text-white rounded-xl font-semibold cursor-pointer transition-all duration-200 shadow-md hover:bg-brand-blue-light hover:shadow-lg hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+
+  .btn-secondary {
+    @apply flex items-center justify-center gap-2 bg-brand-grey-bg text-brand-dark rounded-xl font-semibold cursor-pointer transition-all duration-200 hover:bg-gray-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+  
+  .dark .btn-secondary {
+    @apply bg-brand-dark border border-gray-800 text-white hover:bg-gray-800;
+  }
+
+  .btn-outline {
+    @apply flex items-center justify-center gap-2 bg-transparent border-2 border-brand-blue text-brand-blue rounded-xl font-semibold cursor-pointer transition-all duration-200 hover:bg-brand-blue-tint active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+  
+  .dark .btn-outline {
+    @apply border-brand-blue-light text-brand-blue-light hover:bg-brand-blue hover:text-white hover:bg-white/20;
+  }
+
+  /* Inputs */
+  .input-field {
+    @apply w-full bg-brand-grey-bg border border-transparent rounded-xl text-brand-dark outline-none transition-all duration-200 focus:bg-white focus:border-brand-blue focus:ring-4 focus:ring-brand-blue-tint;
+    padding: 16px;
+    font-size: 15px;
+  }
+
+  .dark .input-field {
+    @apply bg-[#1A1A1A] border-[#2A2A2A] text-white focus:bg-[#222] focus:border-brand-blue focus:ring-brand-blue/20;
+  }
+
+  /* Cards & Glassmorphism */
+  .card-surface {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    @apply rounded-2xl shadow-sm transition-all duration-300;
+  }
+
+  .glass-panel {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    @apply rounded-2xl shadow-lg;
+  }
+
+  /* Skeletons */
+  .skeleton-loader {
+    @apply animate-pulse bg-gray-200 rounded-md;
+  }
+  .dark .skeleton-loader {
+    @apply bg-gray-800;
+  }
+}
