@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Users, Building, ShieldAlert, BarChart, CheckCircle2, XCircle, FileText } from "lucide-react";
 
 const mockNgos = [

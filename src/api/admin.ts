@@ -1,21 +1,17 @@
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+import API from "./client";
 
 export const getAdminStats = async () => {
-  await delay(800);
-  return { data: { success: true, data: { totalUsers: 15420, activeCampaigns: 432, fraudAlerts: 12 } } };
+  return API.get("/admin/stats");
 };
 
 export const getPendingNgos = async () => {
-  await delay(800);
-  return { data: { success: true, data: [{ id: '1', name: 'Global Help', documents: 'verified' }] } };
+  return API.get("/admin/ngos/pending");
 };
 
 export const approveNgo = async (id: string, status: "approved" | "rejected") => {
-  await delay(500);
-  return { data: { success: true, message: `NGO ${status}` } };
+  return API.put(`/admin/ngos/${id}/approve`, { status });
 };
 
 export const getFraudAlerts = async () => {
-  await delay(800);
-  return { data: { success: true, data: [{ id: 'alert1', reason: 'Multiple failed logins' }] } };
+  return API.get("/admin/fraud");
 };

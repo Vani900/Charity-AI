@@ -1,0 +1,14 @@
+{
+  "name": "charityai-mobile-appium",
+  "version": "1.0.0",
+  "description": "Appium E2E Mobile Test Suite for CharityChain (Android/Capacitor)",
+  "main": "run.js",
+  "scripts": {
+    "test": "node run.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
+    "webdriverio": "^8.34.0"
+  }
+}

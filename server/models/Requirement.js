@@ -35,6 +35,10 @@ const requirementSchema = new mongoose.Schema(
       enum: ['open', 'in_progress', 'fulfilled', 'closed'],
       default: 'open',
     },
+    isFulfilled: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

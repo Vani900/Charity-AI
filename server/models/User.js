@@ -17,7 +17,10 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      required: true,
+      required: function() {
+        // Phone is optional if the user signed up via Google OAuth
+        return !this.googleId;
+      },
     },
     password: {
       type: String,
@@ -41,7 +44,11 @@ const userSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: true,
+      required: function() {
+        // Address is optional for Google OAuth users
+        return !this.googleId;
+      },
+      default: '',
     },
     location: {
       type: {

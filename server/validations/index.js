@@ -4,10 +4,10 @@ const registerValidation = (data) => {
   const schema = Joi.object({
     name: Joi.string().min(2).max(100).required(),
     email: Joi.string().email().required(),
-    phone: Joi.string().min(7).max(15).required(),
-    password: Joi.string().min(6).required(),
+    phone: Joi.string().min(7).max(15).optional().allow(''),
+    password: Joi.string().min(6).optional().allow(''),
     role: Joi.string().valid('donor', 'ngo', 'admin').default('donor'),
-    address: Joi.string().min(5).max(300).required(),
+    address: Joi.string().min(2).max(300).optional().allow(''),
     // Geo coords optional — default [0,0] set in User model
     longitude: Joi.number().min(-180).max(180).optional(),
     latitude: Joi.number().min(-90).max(90).optional(),

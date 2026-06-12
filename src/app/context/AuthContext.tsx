@@ -14,6 +14,7 @@ interface AuthContextType {
   user: User | null;
   login: (userData: User) => void;
   logout: () => void;
+  updateUser: (partial: Partial<User>) => void;
   isLoading: boolean;
 }
 
@@ -24,13 +25,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check localStorage on initial load
     const storedUser = localStorage.getItem("charityai_user");
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
       } catch (e) {
         console.error("Failed to parse user from local storage", e);
+        localStorage.removeItem("charityai_user");
       }
     }
     setIsLoading(false);
@@ -46,8 +47,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("charityai_user");
   };
 
+  /** Allows profile updates without requiring full re-login */
+  const updateUser = (partial: Partial<User>) => {
+    if (!user) return;
+    const updated = { ...user, ...partial };
+    setUser(updated);
+    localStorage.setItem("charityai_user", JSON.stringify(updated));
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

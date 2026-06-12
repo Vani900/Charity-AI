@@ -1,64 +1,27 @@
-// Mock API Layer for Donor functionality
-// Simulates network latency and returns valid responses to ensure frontend robustness.
-
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+import API from "./client";
 
 export const getNearbyNgos = async (lat: number, lng: number) => {
-  await delay(800);
-  return {
-    data: {
-      success: true,
-      data: [
-        { _id: '1', name: 'Chennai Food Bank', distance: 800, ngoDetails: { causes: ['Food'] }, location: { coordinates: [80.2707, 13.0827] } },
-        { _id: '2', name: 'Blood Connect', distance: 1200, ngoDetails: { causes: ['Blood'] }, location: { coordinates: [80.2720, 13.0840] } },
-        { _id: '3', name: 'ClothesForAll', distance: 2100, ngoDetails: { causes: ['Clothes'] }, location: { coordinates: [80.2680, 13.0800] } },
-      ]
-    }
-  };
+  return API.get(`/donations/nearby-ngos?latitude=${lat}&longitude=${lng}`);
 };
 
-export const createDonation = async (data: any) => {
-  await delay(1000);
-  return { data: { success: true, message: "Donation successful", id: Math.random().toString(36).substring(7) } };
+export const createDonation = async (data: FormData | any) => {
+  const isFormData = data instanceof FormData;
+  return API.post("/donations", data, {
+    headers: isFormData ? { "Content-Type": "multipart/form-data" } : undefined,
+  });
 };
 
 export const getMyDonations = async (page = 1, limit = 10) => {
-  await delay(800);
-  return {
-    data: {
-      success: true,
-      data: [
-        { _id: '101', category: 'Food', status: 'completed', date: new Date().toISOString(), quantity: '20 meals' },
-        { _id: '102', category: 'Clothes', status: 'pending', date: new Date().toISOString(), quantity: '5 boxes' },
-      ]
-    }
-  };
+  return API.get(`/donations/my-history?page=${page}&limit=${limit}`);
 };
 
 export const getDonationTracking = async (id: string) => {
-  await delay(500);
-  return {
-    data: {
-      success: true,
-      data: {
-        id,
-        status: 'in-transit',
-        driver: { name: 'Ramesh', phone: '9876543210' },
-        eta: '15 mins'
-      }
-    }
-  };
+  return API.get(`/donations/${id}/tracking`);
 };
 
 export const getAiMatch = async (items: string, lat?: number, lng?: number) => {
-  await delay(1200);
-  return {
-    data: {
-      success: true,
-      data: [
-        { _id: '1', name: 'Chennai Food Bank', matchScore: 98, distance: 800 },
-        { _id: '2', name: 'ClothesForAll', matchScore: 75, distance: 2100 },
-      ]
-    }
-  };
+  const params = new URLSearchParams({ items });
+  if (lat !== undefined) params.append("latitude", String(lat));
+  if (lng !== undefined) params.append("longitude", String(lng));
+  return API.get(`/donations/ai-match?${params.toString()}`);
 };

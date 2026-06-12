@@ -1,0 +1,21 @@
+{
+  "name": "charityai-selenium-e2e",
+  "version": "1.0.0",
+  "description": "Selenium WebDriver End-to-End Test Suite for CharityAI Web Application",
+  "main": "run.js",
+  "scripts": {
+    "test": "node run.js",
+    "test:headless": "cross-env HEADLESS=true node run.js",
+    "test:auth": "node run.js --suite=auth",
+    "test:donor": "node run.js --suite=donor",
+    "test:ngo": "node run.js --suite=ngo",
+    "test:admin": "node run.js --suite=admin",
+    "test:edge": "node run.js --suite=edge"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
+    "selenium-webdriver": "^4.22.0"
+  }
+}

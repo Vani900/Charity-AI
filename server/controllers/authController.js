@@ -105,8 +105,8 @@ exports.sendOtp = async (req, res, next) => {
     const { phone } = req.body;
     if (!phone) return sendResponse(res, 400, false, null, 'Phone number is required');
 
-    // Generate a 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // Generate a 6-digit OTP (fixed to 123456 for local dev bypass)
+    const otp = process.env.MSG91_AUTH_KEY ? Math.floor(100000 + Math.random() * 900000).toString() : '123456';
     // Store with 5-minute expiry
     otpStore.set(phone, { otp, expires: Date.now() + 5 * 60 * 1000 });
 
@@ -139,7 +139,7 @@ exports.sendOtp = async (req, res, next) => {
   }
 };
 
-// @desc    Verify OTP
+// @desc    Verify OTP and optionally login
 // @route   POST /api/auth/verify-otp
 // @access  Public
 exports.verifyOtp = async (req, res, next) => {
@@ -162,6 +162,27 @@ exports.verifyOtp = async (req, res, next) => {
 
     // Valid OTP — clean up store
     otpStore.delete(phone);
+
+    // Check if user exists with this phone number
+    const user = await User.findOne({ phone });
+    if (user) {
+      // Login flow
+      const token = generateToken(user._id, user.role);
+      const refreshToken = crypto.randomBytes(40).toString('hex');
+      user.refreshToken = refreshToken;
+      await user.save();
+
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+      });
+
+      return sendResponse(res, 200, true, { token, user: { id: user._id, name: user.name, role: user.role, email: user.email } }, 'OTP verified, login successful');
+    }
+
+    // Phone verified, but no user exists yet
     sendResponse(res, 200, true, null, 'OTP verified successfully');
   } catch (error) {
     next(error);
